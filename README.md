@@ -13,4 +13,4 @@
   * Include()：資料有設外鍵情況下使用，如果沒有關聯的話則用join()去關聯
 
 * SQL讀取資料
-  * 使用sql語法查詢要小心sql injection，避免方法可以參考 https://learn.microsoft.com/zh-tw/ef/core/querying/sql-queries
+  * 使用sql語法查詢要小心sql injection，避免方法可以參考 https://learn.microsoft.com/zh-tw/ef/core/querying/sql-queries ，簡單總結就是把傳進來的參數做參數化的動作，避免傳進來的參數能夠直接竄改sql語法
