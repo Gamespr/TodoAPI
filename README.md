@@ -1,5 +1,5 @@
 # ASP.NET Core WebApi其他實作及練習
-#* LINQ
+* LINQ
   * Where()：查詢條件，符合條件的資料就會列出來，俐：Where(d=>d.length>3)
   * Select()：將資料做選擇性輸出
   * Distinct()：去除資料中重複的元素
