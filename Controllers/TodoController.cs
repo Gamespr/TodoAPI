@@ -58,7 +58,7 @@ namespace TodoApi.Controllers
                 result= result.Where(a=>a.Orders>=value.minOrder && a.Orders<=value.maxOrder);
             }
 
-            if(result == null || result.Count()==0)
+            if(result == null || result.Count()<=0)
             {
                 return NotFound("無此資料");
             }
@@ -71,15 +71,39 @@ namespace TodoApi.Controllers
             //return _iMapper.Map<IEnumerable<TodoListSelectDto>>(result);
         }
 
+        [HttpGet("GetSQL")]
+        //SQL語法查詢
+        public IActionResult GetSQL(string name)
+        {
+            //使用sql語法查詢要小心sql injection，避免方法可以參考 https://learn.microsoft.com/zh-tw/ef/core/querying/sql-queries
+            //簡單總結就是把傳進來的參數做參數化的動作，避免傳進來的參數能夠直接竄改sql語法
+
+            string sql = "select * from todolist where 1=1";
+
+            if(!string.IsNullOrEmpty(name))
+            {
+                sql = sql + "and name like N'%" + name + "%'";
+            }
+
+            var result = _todoContext.TodoLists.FromSqlRaw(sql);
+
+            return Ok(result);
+        }
+
         // GET api/<TodoController>/5
         [HttpGet("{id}")]
-        public TodoListSelectDto Get(Guid id)
+        public ActionResult<TodoListSelectDto> Get(Guid id)
         {
             var result = (from a in _todoContext.TodoLists
                           where a.TodoId == id
                           select a)
                           .Include(a => a.UpdateEmployee).Include(a => a.InsertEmployee)
                           .SingleOrDefault();   //如果下Single()沒取到資料程式會當掉 SingleOrDefault()會是null
+
+            if(result == null)
+            {
+                return NotFound("找不到ID：" + id + "的資料");
+            }
     
 
             return ItemToDto(result);
